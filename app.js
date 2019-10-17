@@ -11,6 +11,7 @@ const categoryRoutes = require('./api/routes/categories');
 const userRoutes = require('./api/routes/users');
 const productRoutes = require('./api/routes/products');
 const cartItemRoutes = require('./api/routes/cartItems');
+const orderRoutes = require('./api/routes/orders');
 
 app.use(cors());
 app.use(express.json());
@@ -20,6 +21,7 @@ app.use('/category', categoryRoutes);
 app.use('/user', userRoutes);
 app.use('/products', productRoutes);
 app.use('/cart', authenticate, cartItemRoutes);
+app.use('/order', authenticate, orderRoutes);
 
 
 module.exports = app;

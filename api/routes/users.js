@@ -3,8 +3,10 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const authenticate  = require('../middleware/authenticate');
 
 const User = require('../models/user');
+const UserAddress = require('../models/userAddress');
 
 router.post('/signup', (req, res, next) => {
 
@@ -118,6 +120,69 @@ router.post('/login', (req, res, next) => {
         });
     })
 
+
+});
+
+router.post('/new-address', authenticate, (req, res, next) => {
+
+    UserAddress.findOne({"user": req.body.userId})
+    .exec()
+    .then(user => {
+
+        if(user){
+
+            UserAddress.updateOne({"user": req.body.userId}, {
+                $push: {
+                    "address": req.body.address
+                }
+            })
+            .then(doc => {
+                res.status(201).json({
+                    message: doc
+                });
+            });
+
+        }else{
+
+            const userAddress = new UserAddress({
+                _id: new mongoose.Types.ObjectId(),
+                user: req.body.userId,
+                address: req.body.address
+            });
+
+            userAddress.save()
+            .then(doc => {
+                res.status(201).json({
+                    message: doc
+                });
+            })
+            .catch(error => {
+                res.status(500).json({
+                    error: error
+                });
+            })
+
+        }
+
+    });
+
+});
+
+router.get('/get-addresses/:userId', authenticate, (req, res, next) => {
+
+    UserAddress.findOne({"user": req.params.userId})
+    .select('_id user address')
+    .exec()
+    .then(user => {
+        res.status(200).json({
+            message: user
+        })
+    })
+    .catch(error => {
+        res.status(500).json({
+            error: error
+        })
+    })
 
 });
 
