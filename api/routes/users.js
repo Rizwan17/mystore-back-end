@@ -131,10 +131,12 @@ router.post('/new-address', authenticate, (req, res, next) => {
 
         if(user){
 
-            UserAddress.updateOne({"user": req.body.userId}, {
+            UserAddress.findOneAndUpdate({"user": req.body.userId}, {
                 $push: {
                     "address": req.body.address
                 }
+            }, {
+                new: true
             })
             .then(doc => {
                 res.status(201).json({

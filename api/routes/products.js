@@ -3,9 +3,10 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Product = require('../models/product');
 const Category = require('../models/category');
+const authenticate = require('../middleware/authenticate');
 
 
-router.post('/create', (req, res, next) => {
+router.post('/create', authenticate, (req, res, next) => {
 
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
