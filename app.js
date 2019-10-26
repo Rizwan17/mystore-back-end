@@ -22,6 +22,11 @@ app.use('/user', userRoutes);
 app.use('/products', productRoutes);
 app.use('/cart', authenticate, cartItemRoutes);
 app.use('/order', authenticate, orderRoutes);
+app.use((req, res, next) => {
+    res.status(404).json({
+        message: 'Not Found'
+    })
+})
 
 
 module.exports = app;

@@ -8,10 +8,12 @@ const authenticate = require('../middleware/authenticate');
 
 router.post('/create', authenticate, (req, res, next) => {
 
+    const slug = req.body.name.replace(/ /g, '-') +'-'+ Date.now();
+
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        slug: req.body.slug,
+        slug: slug,
         price: req.body.price,
         stock: req.body.stock,
         description: req.body.description,
